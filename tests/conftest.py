@@ -11,9 +11,6 @@ from src.utils.config import Config
 from src.models import metadata
 from src.models import frame_service_informations
 
-
-from src.utils.config import Config
-
 if TYPE_CHECKING:
     from fastapi import FastAPI
     from sqlalchemy import Engine
@@ -27,7 +24,6 @@ def app() -> 'FastAPI':
         FastAPI приложение.
     """
     config = Config('config.yaml')
-    config.fastAPI['SQLALCHEMY_DATABASE_URI'] = config.fastAPI['SQLALCHEMY_TEST_DATABASE_URI']
     app = create_fastAPI_app(config.fastAPI)
     return app
 
@@ -39,7 +35,7 @@ def engine() -> 'Engine':
     Returns:
         Подключение к базе данных с таблицами и без данных.
     """
-    DATABASE_URL = Config().fastAPI['SQLALCHEMY_TEST_DATABASE_URI']
+    DATABASE_URL = os.getenv('SQLALCHEMY_DATABASE_URI')
     engine = create_engine(DATABASE_URL)
     metadata.drop_all(engine)
     metadata.create_all(engine)

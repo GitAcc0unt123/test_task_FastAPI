@@ -1,1 +1,1 @@
-from .frame_service_information import frame_service_informations
+from .frame_service_information import frame_service_informations, metadata

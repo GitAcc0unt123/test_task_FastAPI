@@ -1,5 +1,5 @@
-from .database import metadata, engine
-from .tables import frame_service_informations
+from .database import engine
+from .tables import frame_service_informations, metadata
 
 __all__ = [
     metadata,

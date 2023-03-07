@@ -4,6 +4,8 @@ services:
   test_app:
     build: .
     command: bash -c "sleep 3s && pytest -vv"
+    environment:
+      - SQLALCHEMY_DATABASE_URI=postgresql://username:qwerty123@test_database:5432/test?sslmode=disable
     depends_on:
       - test_database
   test_database:
