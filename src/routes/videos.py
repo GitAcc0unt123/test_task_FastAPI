@@ -8,11 +8,11 @@ from src.utils.config import Config
 videos_router = APIRouter()
 
 @videos_router.get('')
-def get_video_list():
+def get_video_list() -> JSONResponse:
     """Возвращает список имён файлов и полный путь к ним из указанного в конфигурационном файле каталога с видео.
     """
-    video_dir_path = Config().fastAPI['VIDEOS_DIR_PATH']
     try:
+        video_dir_path = Config().fastAPI['VIDEOS_DIR_PATH']
         response_data = [
             {
                 "file_name": filename,

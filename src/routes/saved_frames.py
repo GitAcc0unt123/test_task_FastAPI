@@ -14,7 +14,7 @@ from src.utils.config import Config
 saved_frames_router = APIRouter()
 
 @saved_frames_router.get('')
-def get_saved_frames():
+def get_saved_frames() -> JSONResponse:
     """Возвращает список сохранённых кадров со служебной информацией из базы данных.
     """
     try:
@@ -39,7 +39,7 @@ class ServiceInfoSchema(BaseModel):
 
 
 @saved_frames_router.post('/new_frame')
-def create_saved_frame(service_info: ServiceInfoSchema):
+def create_saved_frame(service_info: ServiceInfoSchema) -> JSONResponse:
     """Сохраняет в БД служебную информацию о ранее сохранённом кадре.
 
     Params:
@@ -49,14 +49,14 @@ def create_saved_frame(service_info: ServiceInfoSchema):
     video_file_name = service_info.file_path
     frame_number = service_info.frame_number
 
-    # check frame
-    config = Config()
-    frame_name = f'{frame_number}.png'
-    frame_path = os.path.join(config.fastAPI['FRAMES_DIR_PATH'], video_file_name, frame_name)
-    if not os.path.isfile(frame_path):
-        return JSONResponse({ "message": "Frame doesn't exist." }, 400)
-
     try:
+        # check frame
+        config = Config()
+        frame_name = f'{frame_number}.png'
+        frame_path = os.path.join(config.fastAPI['FRAMES_DIR_PATH'], video_file_name, frame_name)
+        if not os.path.isfile(frame_path):
+            return JSONResponse({ "message": "Frame doesn't exist." }, 400)
+
         with engine.connect() as conn:
             stmt = insert(frame_service_informations).values(
                 video_file_name=video_file_name,

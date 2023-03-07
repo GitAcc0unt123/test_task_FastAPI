@@ -37,9 +37,16 @@ def test_route_frames_file_name_len_0(client: 'TestClient'):
         client: Тестовый клиент.
     """
     response = client.get(f'/api/frames?file_name=&time_in_video=1')
-    assert response.status_code == 400
+    assert response.status_code == 422
     assert response.json() == {
-        "file_name": "Shorter than minimum length 1."
+        'detail': [
+            {
+                'loc': ['query', 'file_name'],
+                'msg': 'ensure this value has at least 1 characters',
+                'type': 'value_error.any_str.min_length',
+                'ctx': {'limit_value': 1}
+            }
+        ]
     }
 
 
@@ -79,10 +86,16 @@ def test_route_frames_invalid_time(client: 'TestClient'):
         client: Тестовый клиент.
     """
     response = client.get('/api/frames?file_name=sample-1.mp4&time_in_video=-1')
-    assert response.status_code == 400
+    assert response.status_code == 422
     assert response.json() == {
-        "time_in_video": "Less than minimum value 0."
-    }
+        'detail': [
+        {
+            'loc': ['query', 'time_in_video'],
+            'msg': 'ensure this value is greater than or equal to 0',
+            'type': 'value_error.number.not_ge',
+            'ctx': {'limit_value': 0}
+        }
+    ]}
 
 
 def test_route_frames_big_time(client: 'TestClient'):
